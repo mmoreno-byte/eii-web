@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+:root {
+  --vp-font-family-base: 'Nunito', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --vp-font-family-mono: 'JetBrains Mono', monospace;
+  --vp-c-brand-1: #E67E22;
+  --vp-c-brand-2: #D35400;
+  --vp-c-brand-3: #A04000;
+  --vp-c-bg: #F8F9FA;
+  --vp-c-text-1: #1A3C4A;
+}
+
+.dark {
+  --vp-c-bg: #1A2A33;
+  --vp-c-text-1: #E8ECEF;
+}
+
+.VPHomeHero .name {
+  color: #1A3C4A !important;
+}
+
+.VPHomeHero .text {
+  color: #E67E22 !important;
+}
+
+.VPButton.brand {
+  background-color: #E67E22 !important;
+  border-color: #D35400 !important;
+}
+
+.VPButton.brand:hover {
+  background-color: #D35400 !important;
+}
+
+.VPFeature .title {
+  color: #1A3C4A !important;
+}
+
+.VPFeature .icon {
+  background-color: rgba(230, 126, 34, 0.1) !important;
+  color: #E67E22 !important;
+}
+
+/* Fondo principal con un toque cálido */
+.VPHome {
+  background: linear-gradient(180deg, #F8F5F0 0%, #FFFFFF 100%) !important;
+}
+
+/* Tarjetas de características con sombra suave */
+.VPFeature {
+  background: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(4px);
+  border-radius: 20px !important;
+  border: 1px solid rgba(230, 126, 34, 0.1) !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05) !important;
+  transition: all 0.3s ease !important;
+}
+
+.VPFeature:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(230, 126, 34, 0.15) !important;
+}
+
+/* Estilo para el manifiesto */
+.custom-manifesto {
+  background: #FFFFFF;
+  border-radius: 24px;
+  padding: 2.5rem;
+  margin: 3rem auto;
+  max-width: 800px;
+  border-left: 6px solid #E67E22;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+}

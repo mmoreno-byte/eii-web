@@ -1,0 +1,19 @@
+{
+  "name": "eii-web",
+  "version": "1.0.0",
+  "description": "Centro de Control para Guerreros Invisibles",
+  "type": "module",
+  "scripts": {
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  },
+  "dependencies": {
+    "chart.js": "^4.4.0",
+    "recharts": "^2.8.0"
+  },
+  "devDependencies": {
+    "vitepress": "1.0.0-rc.20",
+    "vue": "3.3.4"
+  }
+}
