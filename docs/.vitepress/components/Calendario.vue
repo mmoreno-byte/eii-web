@@ -1,10 +1,19 @@
 <template>
   <div class="calendario-container">
-    <h3>📅 Registro de Hoy</h3>
+    <!-- Encabezado y navegación del mes -->
+    <div class="cal-header">
+      <h3>📅 Tu Mes en Órbita</h3>
+      <div class="cal-nav">
+        <button class="cal-nav-btn" @click="cambiarMes(-1)" aria-label="Mes anterior">‹</button>
+        <span class="cal-mes-actual">{{ nombreMes }}</span>
+        <button class="cal-nav-btn" @click="cambiarMes(1)" aria-label="Mes siguiente">›</button>
+        <button class="cal-hoy-btn" @click="irAHoy">Hoy</button>
+      </div>
+    </div>
 
-    <!-- Resumen ejecutivo -->
-    <div v-if="registros.length > 0" class="resumen-ejecutivo">
-      <h4>📊 Resumen de la semana</h4>
+    <!-- Resumen ejecutivo del mes -->
+    <div v-if="registrosMes.length > 0" class="resumen-ejecutivo">
+      <h4>📊 Resumen del mes</h4>
       <div class="estadisticas">
         <div class="stat">
           <span class="stat-valor">{{ dolorMedio }}</span>
@@ -15,340 +24,619 @@
           <span class="stat-etiqueta">Estrés medio</span>
         </div>
         <div class="stat">
-          <span class="stat-valor">{{ deposicionesMedia }}</span>
-          <span class="stat-etiqueta">Deposiciones/día</span>
+          <span class="stat-valor">{{ deposicionesTotal }}</span>
+          <span class="stat-etiqueta">Deposiciones totales</span>
         </div>
         <div class="stat">
-          <span class="stat-valor">{{ totalRegistros }}</span>
+          <span class="stat-valor">{{ sueñoMedio }}h</span>
+          <span class="stat-etiqueta">Sueño medio</span>
+        </div>
+        <div class="stat">
+          <span class="stat-valor">{{ totalRegistros }}/{{ diasDelMes }}</span>
           <span class="stat-etiqueta">Días registrados</span>
         </div>
       </div>
     </div>
-    
-    <form @submit.prevent="guardarRegistro" class="form-grid">
-      <div class="form-group">
-        <label>Nº deposiciones</label>
-        <input v-model="nuevoRegistro.deposiciones" type="number" required />
-      </div>
-      
-      <div class="form-group">
-        <label>Tipo Bristol</label>
-        <select v-model="nuevoRegistro.tipoBristol" required>
-          <option value="">Selecciona</option>
-          <option v-for="n in 7" :key="n" :value="n">{{ n }}</option>
-        </select>
-      </div>
-      
-      <div class="form-group">
-        <label>Dolor (1-10)</label>
-        <input v-model="nuevoRegistro.dolor" type="number" min="1" max="10" required />
-      </div>
-      
-      <div class="form-group">
-        <label>Estrés (1-10)</label>
-        <input v-model="nuevoRegistro.estres" type="number" min="1" max="10" required />
-      </div>
-      
-      <div class="form-group">
-        <label>Horas de sueño</label>
-        <input v-model="nuevoRegistro.sueño" type="number" step="0.5" required />
-      </div>
-      
-      <div class="form-group full-width">
-        <label>Notas (ej. comida, evento...)</label>
-        <input v-model="nuevoRegistro.notas" placeholder="Opcional" />
-      </div>
-      
-      <button type="submit" class="btn-guardar">Guardar Registro</button>
-    </form>
 
-    <div class="lista-registros">
-      <h4>📋 Últimos 7 días</h4>
-      <p v-if="registros.length === 0" class="vacio">Todavía no hay registros. ¡Empieza hoy!</p>
-      
-      <ul v-else>
-        <li v-for="(r, i) in registros.slice(-7).reverse()" :key="i">
-          <div class="registro-header">
-            <span class="fecha">{{ r.fecha }}</span>
-            <span class="badges">
-              <span class="badge">Dep: {{ r.deposiciones }}</span>
-              <span class="badge">Bristol: {{ r.tipoBristol }}</span>
-              <span class="badge">Dolor: {{ r.dolor }}/10</span>
-              <span class="badge">Estrés: {{ r.estres }}/10</span>
-              <span class="badge">🛌 {{ r.sueño }}h</span>
-            </span>
+    <!-- Formulario de registro rápido -->
+    <details class="form-toggle" open>
+      <summary>➕ Registrar día (click para abrir/cerrar)</summary>
+      <form @submit.prevent="guardarRegistro" class="form-grid">
+        <div class="campo-eii">
+          <label>Fecha</label>
+          <input v-model="nuevoRegistro.fecha" type="date" required />
+        </div>
+        <div class="campo-eii">
+          <label>Nº deposiciones</label>
+          <input v-model="nuevoRegistro.deposiciones" type="number" min="0" required />
+        </div>
+        <div class="campo-eii">
+          <label>Tipo Bristol</label>
+          <select v-model="nuevoRegistro.tipoBristol" required>
+            <option value="">Selecciona</option>
+            <option v-for="n in 7" :key="n" :value="n">{{ n }}</option>
+          </select>
+        </div>
+        <div class="campo-eii">
+          <label>Dolor (1-10)</label>
+          <input v-model="nuevoRegistro.dolor" type="number" min="1" max="10" required />
+        </div>
+        <div class="campo-eii">
+          <label>Estrés (1-10)</label>
+          <input v-model="nuevoRegistro.estres" type="number" min="1" max="10" required />
+        </div>
+        <div class="campo-eii">
+          <label>Horas de sueño</label>
+          <input v-model="nuevoRegistro.sueño" type="number" min="0" step="0.5" required />
+        </div>
+        <div class="campo-eii full-width">
+          <label>Notas (comida, evento, síntoma...)</label>
+          <input v-model="nuevoRegistro.notas" placeholder="Opcional" />
+        </div>
+        <button type="submit" class="btn-cta full-width">
+          💾 Guardar registro
+        </button>
+      </form>
+    </details>
+
+    <!-- Grid del mes -->
+    <div class="mes-grid">
+      <div v-for="d in ['L','M','X','J','V','S','D']" :key="d" class="dia-semana">{{ d }}</div>
+      <div
+        v-for="(celda, i) in celdasMes"
+        :key="i"
+        class="celda-dia"
+        :class="{
+          'celda-vacia': !celda,
+          'celda-fuera': celda && celda.fuera,
+          'celda-registrada': celda && celda.registro,
+          'celda-seleccionada': celda && celda.fecha === fechaSeleccionada
+        }"
+        :style="celda && celda.registro ? { borderLeftColor: colorPorDolor(celda.registro.dolor) } : {}"
+        @click="celda && celda.fecha ? seleccionarDia(celda.fecha) : null"
+      >
+        <template v-if="celda">
+          <div class="celda-numero" :class="{ 'celda-hoy': celda.hoy }">{{ celda.dia }}</div>
+          <div v-if="celda.registro" class="celda-indicadores">
+            <span class="indicador" :title="`Dolor ${celda.registro.dolor}/10`" :style="{ background: colorPorDolor(celda.registro.dolor) }">D {{ celda.registro.dolor }}</span>
+            <span class="indicador" :title="`${celda.registro.deposiciones} deposiciones, Bristol ${celda.registro.tipoBristol}`">B {{ celda.registro.tipoBristol }}</span>
           </div>
-          <div v-if="r.notas" class="notas">📝 {{ r.notas }}</div>
-        </li>
-      </ul>
-      
-      <button v-if="registros.length > 0" @click="borrarDatos" class="btn-borrar">
-        🗑️ Borrar todos los datos
-      </button>
+          <div v-if="celda.registro && celda.registro.notas" class="celda-nota" :title="celda.registro.notas">📝</div>
+        </template>
+      </div>
+    </div>
+
+    <!-- Leyenda del grid -->
+    <div class="leyenda-grid">
+      <span class="leyenda-item">
+        <span class="cuadro" style="background:#2E8B57"></span> Dolor bajo
+      </span>
+      <span class="leyenda-item">
+        <span class="cuadro" style="background:#E6A623"></span> Dolor medio
+      </span>
+      <span class="leyenda-item">
+        <span class="cuadro" style="background:#C0392B"></span> Dolor alto
+      </span>
+      <span class="leyenda-item">
+        <span class="cuadro" style="background:#fff;border:1px dashed #999"></span> Sin registro
+      </span>
+    </div>
+
+    <!-- Detalle del día seleccionado -->
+    <div v-if="registroSeleccionado" class="detalle-dia tarjeta-eii" style="margin-top:1.5rem">
+      <h4>📌 {{ formatearFechaLarga(fechaSeleccionada) }}</h4>
+      <div class="detalle-grid">
+        <div><strong>Deposiciones:</strong> {{ registroSeleccionado.deposiciones }}</div>
+        <div><strong>Bristol:</strong> {{ registroSeleccionado.tipoBristol }}</div>
+        <div><strong>Dolor:</strong> {{ registroSeleccionado.dolor }}/10</div>
+        <div><strong>Estrés:</strong> {{ registroSeleccionado.estres }}/10</div>
+        <div><strong>Sueño:</strong> {{ registroSeleccionado.sueño }}h</div>
+      </div>
+      <p v-if="registroSeleccionado.notas" class="detalle-notas">📝 {{ registroSeleccionado.notas }}</p>
+      <div class="detalle-acciones">
+        <button class="btn-peligro" @click="borrarRegistro(fechaSeleccionada)">🗑️ Borrar este día</button>
+      </div>
+    </div>
+
+    <!-- Gestión de datos -->
+    <div class="gestion-datos">
+      <h4>💾 Tus datos</h4>
+      <p class="gestion-texto">
+        Se guardan <strong>en este navegador</strong> (localStorage). Si cambias de
+        dispositivo o borras la caché, perderás los registros. Te recomendamos
+        exportarlos a JSON periódicamente.
+      </p>
+      <div class="gestion-acciones">
+        <button class="btn-secundario" @click="exportarJSON">⬇️ Exportar JSON</button>
+        <label class="btn-secundario" style="cursor:pointer">
+          ⬆️ Importar JSON
+          <input type="file" accept="application/json" @change="importarJSON" hidden />
+        </label>
+        <button class="btn-peligro" @click="borrarTodo">🗑️ Borrar todo</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, computed, inject, onMounted } from 'vue'
+import { REGISTROS_KEY } from '../theme/index.js'
 
-const registros = ref([]);
+const registros = inject(REGISTROS_KEY)
+if (!registros) {
+  throw new Error('Calendario.vue necesita el provider de registros (theme/index.js)')
+}
+const fechaSeleccionada = ref(null)
+
+const hoy = new Date()
+const mesActual = ref(hoy.getMonth())
+const anioActual = ref(hoy.getFullYear())
+
 const nuevoRegistro = ref({
+  fecha: hoy.toISOString().split('T')[0],
   deposiciones: '',
   tipoBristol: '',
   dolor: '',
   estres: '',
   sueño: '',
   notas: ''
-});
+})
 
-// Propiedades computadas para el resumen
-const totalRegistros = computed(() => registros.value.length);
+const STORAGE_KEY = 'registrosEII'
 
-const dolorMedio = computed(() => {
-  if (registros.value.length === 0) return 0;
-  const total = registros.value.reduce((sum, r) => sum + Number(r.dolor), 0);
-  return (total / registros.value.length).toFixed(1);
-});
+const nombreMes = computed(() => {
+  const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+  return `${meses[mesActual.value]} ${anioActual.value}`
+})
 
-const estresMedio = computed(() => {
-  if (registros.value.length === 0) return 0;
-  const total = registros.value.reduce((sum, r) => sum + Number(r.estres), 0);
-  return (total / registros.value.length).toFixed(1);
-});
+const diasDelMes = computed(() => new Date(anioActual.value, mesActual.value + 1, 0).getDate())
 
-const deposicionesMedia = computed(() => {
-  if (registros.value.length === 0) return 0;
-  const total = registros.value.reduce((sum, r) => sum + Number(r.deposiciones), 0);
-  return (total / registros.value.length).toFixed(1);
-});
+const registrosMes = computed(() => {
+  const prefijo = `${anioActual.value}-${String(mesActual.value + 1).padStart(2, '0')}`
+  return registros.value.filter(r => r.fecha && r.fecha.startsWith(prefijo))
+})
 
-const guardarRegistro = () => {
-  const registro = {
-    fecha: new Date().toISOString().split('T')[0],
-    ...nuevoRegistro.value
-  };
-  registros.value = [...registros.value, registro];
-  localStorage.setItem('registrosEII', JSON.stringify(registros.value));
-  nuevoRegistro.value = { deposiciones: '', tipoBristol: '', dolor: '', estres: '', sueño: '', notas: '' };
-};
+// Estadísticas del mes
+const dolorMedio = computed(() => promedio(registrosMes.value, 'dolor'))
+const estresMedio = computed(() => promedio(registrosMes.value, 'estres'))
+const sueñoMedio = computed(() => {
+  const m = promedio(registrosMes.value, 'sueño')
+  return m === '—' ? m : m
+})
+const deposicionesTotal = computed(() =>
+  registrosMes.value.reduce((s, r) => s + Number(r.deposiciones || 0), 0)
+)
+const totalRegistros = computed(() => registrosMes.value.length)
 
-const borrarDatos = () => {
-  if (confirm('¿Borrar todos los registros?')) {
-    localStorage.removeItem('registrosEII');
-    registros.value = [];
+function promedio(lista, campo) {
+  if (lista.length === 0) return '—'
+  const t = lista.reduce((s, r) => s + Number(r[campo] || 0), 0)
+  return (t / lista.length).toFixed(1)
+}
+
+// Celdas del mes con offset para que empiece en lunes
+const celdasMes = computed(() => {
+  const celdas = []
+  const primerDia = new Date(anioActual.value, mesActual.value, 1)
+  // Ajuste para que la semana empiece en lunes (0=domingo → 6, 1=lunes → 0)
+  const offset = (primerDia.getDay() + 6) % 7
+  for (let i = 0; i < offset; i++) celdas.push(null)
+
+  for (let d = 1; d <= diasDelMes.value; d++) {
+    const fecha = `${anioActual.value}-${String(mesActual.value + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
+    const registro = registros.value.find(r => r.fecha === fecha) || null
+    const hoyStr = hoy.toISOString().split('T')[0]
+    celdas.push({
+      dia: d,
+      fecha,
+      registro,
+      hoy: fecha === hoyStr,
+      fuera: false
+    })
   }
-};
+  return celdas
+})
+
+const registroSeleccionado = computed(() => {
+  if (!fechaSeleccionada.value) return null
+  return registros.value.find(r => r.fecha === fechaSeleccionada.value) || null
+})
+
+function colorPorDolor(d) {
+  const n = Number(d)
+  if (n <= 3) return '#2E8B57'   // verde
+  if (n <= 6) return '#E6A623'   // ámbar
+  return '#C0392B'                // rojo
+}
+
+function cambiarMes(delta) {
+  let m = mesActual.value + delta
+  let y = anioActual.value
+  if (m < 0) { m = 11; y-- }
+  if (m > 11) { m = 0; y++ }
+  mesActual.value = m
+  anioActual.value = y
+}
+function irAHoy() {
+  mesActual.value = hoy.getMonth()
+  anioActual.value = hoy.getFullYear()
+  fechaSeleccionada.value = hoy.toISOString().split('T')[0]
+}
+function seleccionarDia(fecha) {
+  // Si la celda tiene registro, lo carga; si no, abre el form con esa fecha
+  fechaSeleccionada.value = fecha
+  if (!registros.value.find(r => r.fecha === fecha)) {
+    nuevoRegistro.value.fecha = fecha
+  }
+  // scroll al detalle
+  setTimeout(() => {
+    const el = document.querySelector('.detalle-dia')
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  }, 50)
+}
+
+function formatearFechaLarga(fecha) {
+  if (!fecha) return ''
+  const [y, m, d] = fecha.split('-')
+  const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre']
+  return `${parseInt(d)} de ${meses[parseInt(m) - 1]} de ${y}`
+}
+
+function guardarRegistro() {
+  const r = { ...nuevoRegistro.value }
+  // Reemplaza si ya existe esa fecha
+  const idx = registros.value.findIndex(x => x.fecha === r.fecha)
+  if (idx >= 0) {
+    registros.value[idx] = r
+  } else {
+    registros.value = [...registros.value, r].sort((a, b) => a.fecha.localeCompare(b.fecha))
+  }
+  fechaSeleccionada.value = r.fecha
+  // Reset suave
+  nuevoRegistro.value = {
+    fecha: hoy.toISOString().split('T')[0],
+    deposiciones: '', tipoBristol: '', dolor: '', estres: '', sueño: '', notas: ''
+  }
+}
+
+function borrarRegistro(fecha) {
+  if (!confirm(`¿Borrar el registro del ${fecha}?`)) return
+  registros.value = registros.value.filter(r => r.fecha !== fecha)
+  fechaSeleccionada.value = null
+}
+
+function borrarTodo() {
+  if (!confirm('¿Borrar TODOS los registros? Esta acción no se puede deshacer.')) return
+  if (!confirm('¿Seguro seguro? Piensa en tu médico 😅')) return
+  registros.value = []
+  fechaSeleccionada.value = null
+}
+
+function exportarJSON() {
+  const data = {
+    app: 'Mi Intestino en Órbita',
+    version: 1,
+    exportado: new Date().toISOString(),
+    registros: registros.value
+  }
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `eii-registros-${new Date().toISOString().split('T')[0]}.json`
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
+function importarJSON(e) {
+  const file = e.target.files?.[0]
+  if (!file) return
+  const reader = new FileReader()
+  reader.onload = (ev) => {
+    try {
+      const data = JSON.parse(ev.target.result)
+      const lista = Array.isArray(data) ? data : data.registros
+      if (!Array.isArray(lista)) throw new Error('Formato inválido')
+      // Mezclar sin duplicar por fecha
+      const mapa = new Map(registros.value.map(r => [r.fecha, r]))
+      lista.forEach(r => { if (r.fecha) mapa.set(r.fecha, r) })
+      registros.value = Array.from(mapa.values()).sort((a, b) => a.fecha.localeCompare(b.fecha))
+      persistir()
+      alert(`Importados ${lista.length} registros.`)
+    } catch (err) {
+      alert('Archivo inválido: ' + err.message)
+    }
+  }
+  reader.readAsText(file)
+  e.target.value = ''
+}
 
 onMounted(() => {
-  const datos = localStorage.getItem('registrosEII');
-  if (datos) registros.value = JSON.parse(datos);
-});
+  // La persistencia la gestiona useRegistrosEII (inyectado desde el theme).
+})
+
+defineExpose({ registros })
 </script>
 
 <style scoped>
 .calendario-container {
-  background: #ffffff;
+  background: var(--brand-tarjeta);
   border-radius: 24px;
   padding: 2rem;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-  border: 1px solid rgba(230, 126, 34, 0.08);
+  border: 1px solid var(--brand-borde-suave);
   margin: 2rem 0;
 }
 
-.calendario-container h3 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1A3C4A;
-  margin-bottom: 1.5rem;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.form-group label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #1A3C4A;
-}
-
-.form-group input,
-.form-group select {
-  padding: 0.75rem 1rem;
-  border: 2px solid #e9ecef;
-  border-radius: 12px;
-  font-size: 1rem;
-  transition: all 0.2s ease;
-  background: #f8f9fa;
-  color: #1A3C4A;
-  font-family: inherit;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-  outline: none;
-  border-color: #E67E22;
-  background: #ffffff;
-  box-shadow: 0 0 0 4px rgba(230, 126, 34, 0.1);
-}
-
-.full-width {
-  grid-column: 1 / -1;
-}
-
-.btn-guardar {
-  grid-column: 1 / -1;
-  background: #E67E22;
-  color: white;
-  border: none;
-  padding: 0.9rem;
-  border-radius: 12px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: inherit;
-  letter-spacing: 0.5px;
-  margin-top: 0.5rem;
-}
-
-.btn-guardar:hover {
-  background: #D35400;
-  transform: scale(1.02);
-  box-shadow: 0 8px 20px rgba(230, 126, 34, 0.3);
-}
-
-.lista-registros {
-  margin-top: 2.5rem;
-  border-top: 2px dashed #e9ecef;
-  padding-top: 1.5rem;
-}
-
-.lista-registros h4 {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #1A3C4A;
-  margin-bottom: 1rem;
-}
-
-.vacio {
-  color: #888;
-  font-style: italic;
-}
-
-.lista-registros ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.lista-registros li {
-  background: #f8f9fa;
-  padding: 0.75rem 1rem;
-  border-radius: 12px;
-  border-left: 4px solid #E67E22;
-}
-
-.registro-header {
+.cal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
 }
-
-.fecha {
-  font-weight: 700;
-  color: #1A3C4A;
+.cal-header h3 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--brand-petroleo);
+  margin: 0;
 }
-
-.badges {
+.cal-nav {
   display: flex;
+  align-items: center;
   gap: 0.5rem;
-  flex-wrap: wrap;
+  background: #FBFCFD;
+  padding: 0.35rem 0.6rem;
+  border-radius: 14px;
+  border: 1px solid var(--brand-borde);
 }
-
-.badge {
-  background: white;
-  padding: 0.2rem 0.6rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  border: 1px solid #e9ecef;
-}
-
-.notas {
-  margin-top: 0.3rem;
-  color: #6c757d;
-  font-size: 0.85rem;
-  font-style: italic;
-  width: 100%;
-}
-
-.btn-borrar {
-  background: #e74c3c;
-  color: white;
+.cal-nav-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
   border: none;
-  padding: 0.5rem 1.2rem;
-  border-radius: 20px;
-  font-size: 0.9rem;
+  background: var(--brand-naranja);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 800;
   cursor: pointer;
-  transition: all 0.2s ease;
   font-family: inherit;
-  margin-top: 1rem;
+  transition: all 0.15s ease;
 }
-
-.btn-borrar:hover {
-  background: #c0392b;
-  transform: scale(0.98);
+.cal-nav-btn:hover { background: var(--brand-naranja-hover); }
+.cal-mes-actual {
+  font-weight: 700;
+  color: var(--brand-petroleo);
+  min-width: 140px;
+  text-align: center;
+  text-transform: capitalize;
 }
+.cal-hoy-btn {
+  background: var(--brand-petroleo);
+  color: #fff;
+  border: none;
+  padding: 0.4rem 0.85rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-family: inherit;
+  margin-left: 0.3rem;
+}
+.cal-hoy-btn:hover { background: #0F2A35; }
 
-/* Resumen ejecutivo */
+/* Resumen */
 .resumen-ejecutivo {
-  background: #f8f9fa;
+  background: linear-gradient(135deg, rgba(230,126,34,0.06), rgba(46,139,87,0.04));
   border-radius: 16px;
   padding: 1.2rem 1.5rem;
-  margin-bottom: 2rem;
-  border: 1px solid rgba(230, 126, 34, 0.1);
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--brand-borde-suave);
 }
-
 .resumen-ejecutivo h4 {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #6c757d;
-  margin-bottom: 0.8rem;
+  letter-spacing: 0.6px;
+  color: var(--brand-texto-secundario);
+  margin: 0 0 0.8rem 0;
+  font-weight: 700;
 }
-
 .estadisticas {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
   gap: 1rem;
 }
-
-.stat {
-  text-align: center;
-}
-
+.stat { text-align: center; }
 .stat-valor {
   display: block;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 800;
-  color: #1A3C4A;
+  color: var(--brand-petroleo);
+  line-height: 1.1;
+}
+.stat-etiqueta {
+  font-size: 0.75rem;
+  color: var(--brand-texto-secundario);
 }
 
-.stat-etiqueta {
-  font-size: 0.8rem;
-  color: #6c757d;
+/* Form */
+.form-toggle {
+  background: #FBFCFD;
+  border: 1px solid var(--brand-borde);
+  border-radius: 14px;
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 1.5rem;
+}
+.form-toggle > summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--brand-petroleo);
+  list-style: none;
+  user-select: none;
+}
+.form-toggle > summary::-webkit-details-marker { display: none; }
+.form-toggle > summary::before {
+  content: '📝 ';
+  margin-right: 0.3rem;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+.full-width { grid-column: 1 / -1; }
+
+/* Grid del mes */
+.mes-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin: 1.25rem 0 0.5rem;
+}
+.dia-semana {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--brand-texto-secundario);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding-bottom: 0.3rem;
+}
+.celda-dia {
+  aspect-ratio: 1;
+  background: #FBFCFD;
+  border: 1px solid var(--brand-borde);
+  border-left: 4px solid transparent;
+  border-radius: 10px;
+  padding: 0.35rem;
+  font-size: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+  overflow: hidden;
+}
+.celda-dia:hover:not(.celda-vacia):not(.celda-fuera) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(230,126,34,0.18);
+  border-color: var(--brand-naranja);
+}
+.celda-vacia {
+  background: transparent;
+  border: 1px dashed transparent;
+  cursor: default;
+}
+.celda-fuera {
+  background: #F1F3F5;
+  opacity: 0.5;
+  cursor: default;
+}
+.celda-seleccionada {
+  background: rgba(230,126,34,0.12);
+  border-color: var(--brand-naranja);
+  box-shadow: 0 0 0 3px rgba(230,126,34,0.18);
+}
+.celda-numero {
+  font-weight: 700;
+  color: var(--brand-petroleo);
+  font-size: 0.85rem;
+}
+.celda-hoy {
+  background: var(--brand-naranja);
+  color: #fff;
+  padding: 0.05rem 0.4rem;
+  border-radius: 8px;
+  display: inline-block;
+  align-self: flex-start;
+}
+.celda-indicadores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-top: auto;
+}
+.indicador {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #fff;
+  padding: 0.05rem 0.3rem;
+  border-radius: 6px;
+  background: var(--brand-petroleo);
+}
+.celda-nota {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.3rem;
+  font-size: 0.7rem;
+}
+
+/* Leyenda */
+.leyenda-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.78rem;
+  color: var(--brand-texto-secundario);
+  padding: 0.5rem 0 1rem;
+  border-top: 1px dashed var(--brand-borde);
+  margin-top: 0.75rem;
+}
+.leyenda-item { display: flex; align-items: center; gap: 0.4rem; }
+.cuadro {
+  width: 14px; height: 14px; border-radius: 4px; display: inline-block;
+}
+
+/* Detalle del día */
+.detalle-dia h4 { margin-top: 0; }
+.detalle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.5rem 1rem;
+  font-size: 0.95rem;
+  color: var(--brand-petroleo);
+}
+.detalle-notas {
+  margin: 0.75rem 0 0;
+  padding: 0.6rem 0.8rem;
+  background: rgba(230,126,34,0.08);
+  border-left: 3px solid var(--brand-naranja);
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+  color: var(--brand-petroleo);
+}
+.detalle-acciones { margin-top: 1rem; display: flex; gap: 0.5rem; }
+
+/* Gestión de datos */
+.gestion-datos {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 2px dashed var(--brand-borde);
+}
+.gestion-datos h4 {
+  color: var(--brand-petroleo);
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+}
+.gestion-texto {
+  color: var(--brand-texto-secundario);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+}
+.gestion-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+@media (max-width: 640px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .mes-grid { gap: 4px; }
+  .celda-numero { font-size: 0.75rem; }
+  .indicador { font-size: 0.6rem; }
 }
 </style>

@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "chart.js": "^4.4.0",
-    "recharts": "^2.8.0"
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8"
   },
   "devDependencies": {
     "vitepress": "1.0.0-rc.20",

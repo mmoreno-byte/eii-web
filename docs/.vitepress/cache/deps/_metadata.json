@@ -1,31 +1,53 @@
 {
-  "hash": "79844eda",
-  "configHash": "578ecea5",
-  "lockfileHash": "45db10db",
-  "browserHash": "694accbb",
+  "hash": "5981da66",
+  "browserHash": "efd2440b",
   "optimized": {
     "vue": {
       "src": "../../../../node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "2e165b56",
+      "fileHash": "70bfe212",
       "needsInterop": false
     },
     "vitepress > @vue/devtools-api": {
-      "src": "../../../../node_modules/@vue/devtools-api/dist/index.js",
+      "src": "../../../../node_modules/@vue/devtools-api/lib/esm/index.js",
       "file": "vitepress___@vue_devtools-api.js",
-      "fileHash": "111fb61a",
+      "fileHash": "07229294",
       "needsInterop": false
     },
-    "vitepress > @vueuse/core": {
-      "src": "../../../../node_modules/@vueuse/core/index.mjs",
-      "file": "vitepress___@vueuse_core.js",
-      "fileHash": "3c5636e5",
+    "chart.js": {
+      "src": "../../../../node_modules/chart.js/dist/chart.js",
+      "file": "chart__js.js",
+      "fileHash": "388091e2",
+      "needsInterop": false
+    },
+    "jspdf": {
+      "src": "../../../../node_modules/jspdf/dist/jspdf.es.min.js",
+      "file": "jspdf.js",
+      "fileHash": "c369838a",
+      "needsInterop": false
+    },
+    "jspdf-autotable": {
+      "src": "../../../../node_modules/jspdf-autotable/dist/jspdf.plugin.autotable.mjs",
+      "file": "jspdf-autotable.js",
+      "fileHash": "ad60891c",
       "needsInterop": false
     }
   },
   "chunks": {
-    "chunk-XZN2HQWN": {
-      "file": "chunk-XZN2HQWN.js"
+    "html2canvas.esm-CIBHRG4G": {
+      "file": "html2canvas__esm-CIBHRG4G.js"
+    },
+    "purify.es-JTCAJSEJ": {
+      "file": "purify__es-JTCAJSEJ.js"
+    },
+    "index.es-GWZXLJAZ": {
+      "file": "index__es-GWZXLJAZ.js"
+    },
+    "chunk-2ALL2YQY": {
+      "file": "chunk-2ALL2YQY.js"
+    },
+    "chunk-TCQZMY3T": {
+      "file": "chunk-TCQZMY3T.js"
     }
   }
 }

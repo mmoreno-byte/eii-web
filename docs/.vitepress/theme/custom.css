@@ -1,73 +1,247 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
 
+/* =========================================================
+   MI INTESTINO EN ÓRBITA — Sistema de diseño
+   Variables de marca centralizadas. Si cambias un color aquí,
+   cambia en toda la web y en los PDFs que usan los mismos hex.
+   ========================================================= */
 :root {
+  /* Tipografía */
   --vp-font-family-base: 'Nunito', 'Inter', ui-sans-serif, system-ui, sans-serif;
   --vp-font-family-mono: 'JetBrains Mono', monospace;
-  --vp-c-brand-1: #E67E22;
-  --vp-c-brand-2: #D35400;
-  --vp-c-brand-3: #A04000;
-  --vp-c-bg: #F8F9FA;
-  --vp-c-text-1: #1A3C4A;
+
+  /* Paleta oficial */
+  --brand-naranja: #E67E22;        /* CTA principal */
+  --brand-naranja-hover: #D35400;  /* Hover */
+  --brand-naranja-oscuro: #A04000; /* Acentos profundos */
+  --brand-petroleo: #1A3C4A;       /* Textos, títulos */
+  --brand-petroleo-claro: #2A5A6E; /* Textos secundarios */
+  --brand-crema: #F8F5F0;          /* Fondo cálido */
+  --brand-fondo: #F8F9FA;          /* Fondo base VitePress */
+  --brand-tarjeta: #FFFFFF;        /* Tarjetas */
+  --brand-borde-suave: rgba(230, 126, 34, 0.12);
+  --brand-borde: #E5E9EC;
+  --brand-texto-secundario: #5A6B75; /* Sube contraste desde #6c757d */
+  --brand-texto-muted: #7A8893;
+  --brand-peligro: #E74C3C;
+  --brand-exito: #2E8B57;
+
+  /* Bristol — escala coherente con la web, del "duro" al "líquido" */
+  --bristol-1: #A04000;  /* Muy duro (marrón oscuro) */
+  --bristol-2: #B8651A;  /* Duro */
+  --bristol-3: #D4A017;  /* Normal-formado (mostaza) */
+  --bristol-4: #7FB069;  /* Ideal (verde esperanza) */
+  --bristol-5: #5BA8A0;  /* Blando */
+  --bristol-6: #E67E22;  /* Muy blando (usamos el naranja de marca) */
+  --bristol-7: #C0392B;  /* Líquido (rojo alerta) */
+
+  /* Mapeo a variables de VitePress */
+  --vp-c-brand-1: var(--brand-naranja);
+  --vp-c-brand-2: var(--brand-naranja-hover);
+  --vp-c-brand-3: var(--brand-naranja-oscuro);
+  --vp-c-bg: var(--brand-fondo);
+  --vp-c-text-1: var(--brand-petroleo);
 }
 
 .dark {
   --vp-c-bg: #1A2A33;
   --vp-c-text-1: #E8ECEF;
+  --brand-tarjeta: #243842;
+  --brand-crema: #1F2F37;
+  --brand-borde: #344B57;
+  --brand-texto-secundario: #B8C5CC;
+  --brand-texto-muted: #8FA1AB;
 }
 
-.VPHomeHero .name {
-  color: #1A3C4A !important;
-}
+body { font-family: var(--vp-font-family-base); }
 
-.VPHomeHero .text {
-  color: #E67E22 !important;
-}
+/* Hero */
+.VPHomeHero .name { color: var(--brand-petroleo) !important; }
+.VPHomeHero .text { color: var(--brand-naranja) !important; }
 
+/* Botones */
 .VPButton.brand {
-  background-color: #E67E22 !important;
-  border-color: #D35400 !important;
+  background-color: var(--brand-naranja) !important;
+  border-color: var(--brand-naranja-hover) !important;
 }
-
 .VPButton.brand:hover {
-  background-color: #D35400 !important;
+  background-color: var(--brand-naranja-hover) !important;
+}
+.VPButton.alt {
+  background-color: var(--brand-petroleo) !important;
+  border-color: var(--brand-petroleo) !important;
+  color: #fff !important;
 }
 
-.VPFeature .title {
-  color: #1A3C4A !important;
-}
-
+/* Features */
+.VPFeature .title { color: var(--brand-petroleo) !important; }
 .VPFeature .icon {
   background-color: rgba(230, 126, 34, 0.1) !important;
-  color: #E67E22 !important;
+  color: var(--brand-naranja) !important;
 }
 
 /* Fondo principal con un toque cálido */
 .VPHome {
-  background: linear-gradient(180deg, #F8F5F0 0%, #FFFFFF 100%) !important;
+  background: linear-gradient(180deg, var(--brand-crema) 0%, #FFFFFF 100%) !important;
 }
 
 /* Tarjetas de características con sombra suave */
 .VPFeature {
-  background: rgba(255, 255, 255, 0.8) !important;
+  background: rgba(255, 255, 255, 0.85) !important;
   backdrop-filter: blur(4px);
   border-radius: 20px !important;
-  border: 1px solid rgba(230, 126, 34, 0.1) !important;
+  border: 1px solid var(--brand-borde-suave) !important;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05) !important;
   transition: all 0.3s ease !important;
 }
-
 .VPFeature:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 40px rgba(230, 126, 34, 0.15) !important;
 }
 
-/* Estilo para el manifiesto */
+/* Manifiesto */
 .custom-manifesto {
-  background: #FFFFFF;
+  background: var(--brand-tarjeta);
   border-radius: 24px;
   padding: 2.5rem;
   margin: 3rem auto;
   max-width: 800px;
-  border-left: 6px solid #E67E22;
+  border-left: 6px solid var(--brand-naranja);
   box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+}
+
+/* Utilidades globales reutilizables */
+.tarjeta-eii {
+  background: var(--brand-tarjeta);
+  border-radius: 20px;
+  padding: 1.5rem 1.75rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--brand-borde-suave);
+  margin: 1.5rem 0;
+}
+.tarjeta-eii h3 {
+  color: var(--brand-petroleo);
+  font-weight: 800;
+  font-size: 1.4rem;
+  margin: 0 0 1rem 0;
+}
+.tarjeta-eii h4 {
+  color: var(--brand-petroleo);
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin: 1.25rem 0 0.75rem 0;
+}
+
+.btn-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--brand-naranja);
+  color: #fff;
+  border: none;
+  padding: 0.85rem 1.4rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 0.3px;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+.btn-cta:hover {
+  background: var(--brand-naranja-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(230, 126, 34, 0.3);
+}
+.btn-cta:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+.btn-secundario {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--brand-petroleo);
+  color: #fff;
+  border: none;
+  padding: 0.7rem 1.1rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+.btn-secundario:hover { background: #0F2A35; }
+.btn-peligro {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  color: var(--brand-peligro);
+  border: 1.5px solid var(--brand-peligro);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+.btn-peligro:hover {
+  background: var(--brand-peligro);
+  color: #fff;
+}
+
+.campo-eii {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.campo-eii label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--brand-petroleo);
+}
+.campo-eii input,
+.campo-eii select,
+.campo-eii textarea {
+  padding: 0.7rem 0.9rem;
+  border: 2px solid var(--brand-borde);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  background: #FBFCFD;
+  color: var(--brand-petroleo);
+  font-family: inherit;
+}
+.campo-eii input:focus,
+.campo-eii select:focus,
+.campo-eii textarea:focus {
+  outline: none;
+  border-color: var(--brand-naranja);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(230, 126, 34, 0.12);
+}
+
+.nota-eii {
+  background: rgba(230, 126, 34, 0.08);
+  border-left: 4px solid var(--brand-naranja);
+  padding: 0.9rem 1.1rem;
+  border-radius: 0 12px 12px 0;
+  color: var(--brand-petroleo);
+  font-size: 0.92rem;
+  margin: 1rem 0;
+}
+
+/* Para impresión (vista médica) */
+@media print {
+  .no-print, .VPSidebar, .VPNavBar, .VPDocFooter, .VPDocAnchor { display: none !important; }
+  .VPDoc { padding: 0 !important; max-width: 100% !important; }
+  body { background: #fff !important; }
+  .tarjeta-eii { box-shadow: none !important; border: 1px solid #ddd !important; break-inside: avoid; }
+  @page { size: A4; margin: 12mm; }
 }
