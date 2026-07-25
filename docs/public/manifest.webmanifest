@@ -1,0 +1,26 @@
+{
+  "name": "Mi Intestino en Órbita",
+  "short_name": "EII Web",
+  "description": "Centro de Control para Guerreros Invisibles",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F8F5F0",
+  "theme_color": "#E67E22",
+  "lang": "es-ES",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -403,7 +403,7 @@ defineExpose({ registros: registrosMesGrafico })
 
 .charts-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.25rem;
 }
 .chart-card {
@@ -411,6 +411,8 @@ defineExpose({ registros: registrosMesGrafico })
   border: 1px solid var(--brand-borde);
   border-radius: 16px;
   padding: 1rem 1.1rem;
+  min-width: 0;
+  overflow: hidden;
 }
 .chart-card h4 {
   color: var(--brand-petroleo);
@@ -420,7 +422,10 @@ defineExpose({ registros: registrosMesGrafico })
 }
 .chart-canvas {
   position: relative;
+  width: 100%;
   height: 220px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .solo-impresion { display: none; }
@@ -441,8 +446,8 @@ defineExpose({ registros: registrosMesGrafico })
   }
   .solo-impresion h2 { color: #1A3C4A; margin: 0 0 0.3rem 0; }
   .solo-impresion p { color: #5A6B75; font-size: 0.85rem; margin: 0; }
-  .chart-card { break-inside: avoid; box-shadow: none; }
-  .charts-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .chart-canvas { height: 180px; }
+  .chart-card { break-inside: avoid; box-shadow: none; overflow: hidden; }
+  .charts-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  .chart-canvas { height: 180px; width: 100%; min-width: 0; }
 }
 </style>

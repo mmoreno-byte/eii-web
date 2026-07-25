@@ -137,24 +137,6 @@
         <button class="btn-peligro" @click="borrarRegistro(fechaSeleccionada)">🗑️ Borrar este día</button>
       </div>
     </div>
-
-    <!-- Gestión de datos -->
-    <div class="gestion-datos">
-      <h4>💾 Tus datos</h4>
-      <p class="gestion-texto">
-        Se guardan <strong>en este navegador</strong> (localStorage). Si cambias de
-        dispositivo o borras la caché, perderás los registros. Te recomendamos
-        exportarlos a JSON periódicamente.
-      </p>
-      <div class="gestion-acciones">
-        <button class="btn-secundario" @click="exportarJSON">⬇️ Exportar JSON</button>
-        <label class="btn-secundario" style="cursor:pointer">
-          ⬆️ Importar JSON
-          <input type="file" accept="application/json" @change="importarJSON" hidden />
-        </label>
-        <button class="btn-peligro" @click="borrarTodo">🗑️ Borrar todo</button>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -303,52 +285,6 @@ function borrarRegistro(fecha) {
   if (!confirm(`¿Borrar el registro del ${fecha}?`)) return
   registros.value = registros.value.filter(r => r.fecha !== fecha)
   fechaSeleccionada.value = null
-}
-
-function borrarTodo() {
-  if (!confirm('¿Borrar TODOS los registros? Esta acción no se puede deshacer.')) return
-  if (!confirm('¿Seguro seguro? Piensa en tu médico 😅')) return
-  registros.value = []
-  fechaSeleccionada.value = null
-}
-
-function exportarJSON() {
-  const data = {
-    app: 'Mi Intestino en Órbita',
-    version: 1,
-    exportado: new Date().toISOString(),
-    registros: registros.value
-  }
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = `eii-registros-${new Date().toISOString().split('T')[0]}.json`
-  a.click()
-  URL.revokeObjectURL(url)
-}
-
-function importarJSON(e) {
-  const file = e.target.files?.[0]
-  if (!file) return
-  const reader = new FileReader()
-  reader.onload = (ev) => {
-    try {
-      const data = JSON.parse(ev.target.result)
-      const lista = Array.isArray(data) ? data : data.registros
-      if (!Array.isArray(lista)) throw new Error('Formato inválido')
-      // Mezclar sin duplicar por fecha
-      const mapa = new Map(registros.value.map(r => [r.fecha, r]))
-      lista.forEach(r => { if (r.fecha) mapa.set(r.fecha, r) })
-      registros.value = Array.from(mapa.values()).sort((a, b) => a.fecha.localeCompare(b.fecha))
-      persistir()
-      alert(`Importados ${lista.length} registros.`)
-    } catch (err) {
-      alert('Archivo inválido: ' + err.message)
-    }
-  }
-  reader.readAsText(file)
-  e.target.value = ''
 }
 
 onMounted(() => {
@@ -609,29 +545,6 @@ defineExpose({ registros })
   color: var(--brand-petroleo);
 }
 .detalle-acciones { margin-top: 1rem; display: flex; gap: 0.5rem; }
-
-/* Gestión de datos */
-.gestion-datos {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 2px dashed var(--brand-borde);
-}
-.gestion-datos h4 {
-  color: var(--brand-petroleo);
-  font-weight: 700;
-  margin: 0 0 0.5rem 0;
-}
-.gestion-texto {
-  color: var(--brand-texto-secundario);
-  font-size: 0.88rem;
-  line-height: 1.5;
-  margin-bottom: 0.75rem;
-}
-.gestion-acciones {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-}
 
 @media (max-width: 640px) {
   .form-grid { grid-template-columns: 1fr; }

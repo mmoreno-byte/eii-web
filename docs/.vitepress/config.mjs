@@ -8,14 +8,14 @@ export default defineConfig({
   // Dominio en producción
   cleanUrls: true,
 
-  // Para que VitePress procese dependencias de npm (chart.js, jspdf, vue)
+  // Para que VitePress procese dependencias de npm (chart.js, jspdf, qrcode, vue)
   // y no las inline como archivos externos. Viene por defecto en 1.0.
   vite: {
     optimizeDeps: {
-      include: ['chart.js', 'jspdf', 'jspdf-autotable']
+      include: ['chart.js', 'jspdf', 'jspdf-autotable', 'qrcode']
     },
     ssr: {
-      noExternal: ['chart.js', 'jspdf', 'jspdf-autotable']
+      noExternal: ['chart.js', 'jspdf', 'jspdf-autotable', 'qrcode']
     }
   },
 

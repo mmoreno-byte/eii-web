@@ -9,6 +9,7 @@ import Calendario from '/.vitepress/components/Calendario.vue'
 import GraficoMensual from '/.vitepress/components/GraficoMensual.vue'
 import EscalaBristol from '/.vitepress/components/EscalaBristol.vue'
 import GeneradorPDF from '/.vitepress/components/GeneradorPDF.vue'
+import GestionDatos from '/.vitepress/components/GestionDatos.vue'
 import { inject } from 'vue'
 import { REGISTROS_KEY } from './.vitepress/theme/index.js'
 
@@ -19,7 +20,8 @@ const registros = inject(REGISTROS_KEY)
 <div class="tablero-intro">
   <p>
     Aquí mandas tú. <strong>Registra, observa, lleva a tu médico.</strong>
-    Todo se guarda en tu navegador; exporta a JSON periódicamente para no perder nada.
+    Todo se guarda en tu navegador; expórtalo periódicamente para no perder nada
+    o instálalo como app en el móvil.
   </p>
 </div>
 
@@ -39,11 +41,15 @@ const registros = inject(REGISTROS_KEY)
 
 <GeneradorPDF :registros="registros" />
 
+## 💾 Tus datos, a tu manera
+
+<GestionDatos :registros="registros" />
+
 ---
 
 <div class="nota-eii">
-  🩺 <strong>Para tu próxima consulta:</strong> exporta tu JSON, genera el PDF del
-  mes y llega con gráficas en la mano. Tu digestólogo te lo va a agradecer.
+  🩺 <strong>Para tu próxima consulta:</strong> genera el PDF del mes y llega con
+  gráficas en la mano. Tu digestólogo te lo va a agradecer.
 </div>
 
 <style scoped>

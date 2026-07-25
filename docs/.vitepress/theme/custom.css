@@ -45,19 +45,112 @@
 
 .dark {
   --vp-c-bg: #1A2A33;
+  --vp-c-bg-alt: #243842;
+  --vp-c-bg-soft: #1F2F37;
   --vp-c-text-1: #E8ECEF;
+  --vp-c-text-2: #C5D0D6;
+  --vp-c-text-3: #8FA1AB;
+  --vp-c-divider: #344B57;
+  --vp-c-gutter: #243842;
+  --vp-c-border: #344B57;
+
+  /* Re-mapeo de la paleta de marca para que no se pierdan las letras */
+  --brand-petroleo: #E8ECEF;          /* títulos en oscuro = claros */
+  --brand-petroleo-claro: #C5D0D6;
   --brand-tarjeta: #243842;
   --brand-crema: #1F2F37;
+  --brand-fondo: #1A2A33;
   --brand-borde: #344B57;
-  --brand-texto-secundario: #B8C5CC;
+  --brand-borde-suave: rgba(230, 126, 34, 0.22);
+  --brand-texto-secundario: #C5D0D6;
   --brand-texto-muted: #8FA1AB;
+  --brand-naranja: #F39C5B;            /* un poco más claro en dark para no perderse */
+  --brand-naranja-hover: #FFB37A;
+  --brand-naranja-oscuro: #E67E22;
 }
+
+/* Forzar color en elementos que heredaban de variables light */
+.dark body,
+.dark .VPDoc h1,
+.dark .VPDoc h2,
+.dark .VPDoc h3,
+.dark .VPDoc h4,
+.dark .VPDoc p,
+.dark .VPDoc li,
+.dark .VPDoc strong { color: var(--vp-c-text-1); }
+
+.dark .VPHero .name,
+.dark .VPHomeHero .name,
+.dark .VPHero .text,
+.dark .VPHomeHero .text { color: var(--vp-c-text-1) !important; }
+.dark .VPHero .name .clip,
+.dark .VPHomeHero .name .clip { color: var(--brand-naranja) !important; }
+.dark .VPHero .tagline,
+.dark .VPHomeHero .tagline { color: var(--vp-c-text-2) !important; }
+
+.dark .VPFeature { background: var(--brand-tarjeta) !important; }
+.dark .VPFeature .title { color: var(--vp-c-text-1) !important; }
+.dark .VPFeature .details,
+.dark .VPFeature p { color: var(--vp-c-text-2) !important; }
+
+.dark .custom-manifesto { background: var(--brand-tarjeta); color: var(--vp-c-text-1); }
+.dark .custom-manifesto h2,
+.dark .custom-manifesto strong { color: var(--brand-naranja) !important; }
+.dark .custom-manifesto p { color: var(--vp-c-text-2) !important; }
+
+.dark .tarjeta-eii,
+.dark .calendario-container,
+.dark .grafico-container,
+.dark .pdf-container,
+.dark .bristol-container { background: var(--brand-tarjeta) !important; color: var(--vp-c-text-1); }
+.dark .tarjeta-eii h3,
+.dark .tarjeta-eii h4,
+.dark .calendario-container h3,
+.dark .grafico-container h3,
+.dark .pdf-container h3,
+.dark .bristol-container h3,
+.dark .chart-card h4,
+.dark .resumen-ejecutivo h4 { color: var(--vp-c-text-1) !important; }
+
+.dark .campo-eii label { color: var(--vp-c-text-1); }
+.dark .campo-eii input,
+.dark .campo-eii select,
+.dark .campo-eii textarea { background: #1A2A33; color: var(--vp-c-text-1); border-color: var(--vp-c-border); }
+
+.dark .stat-valor,
+.dark .rc-valor,
+.dark .cal-mes-actual,
+.dark .celda-numero { color: var(--vp-c-text-1); }
+.dark .stat-etiqueta,
+.dark .rc-label,
+.dark .leyenda-grid { color: var(--vp-c-text-2); }
+
+.dark .celda-dia { background: #1F2F37; border-color: var(--vp-c-border); color: var(--vp-c-text-1); }
+.dark .celda-vacia { background: transparent; }
+.dark .celda-fuera { background: #1A2A33; }
+.dark .form-toggle { background: #1F2F37; border-color: var(--vp-c-border); }
+
+.dark .nota-eii { color: var(--vp-c-text-1); background: rgba(230,126,34,0.12); }
+.dark .gestion-texto { color: var(--vp-c-text-2); }
+.dark .bristol-intro,
+.dark .bristol-desc,
+.dark .bristol-leyenda { color: var(--vp-c-text-1); }
+.dark .bristol-card { background: #1F2F37; border-color: var(--vp-c-border); }
+.dark .bristol-card h4 { color: var(--vp-c-text-1); }
+.dark .bristol-tag { background: #243842; }
+.dark .pdf-intro { color: var(--vp-c-text-2); }
+.dark .mes-select { background: #1F2F37; color: var(--vp-c-text-1); border-color: var(--vp-c-border); }
+.dark .vacio-grafico { color: var(--vp-c-text-2); }
+
+.dark .VPHome { background: linear-gradient(180deg, var(--brand-crema) 0%, var(--brand-fondo) 100%) !important; }
 
 body { font-family: var(--vp-font-family-base); }
 
 /* Hero */
 .VPHomeHero .name { color: var(--brand-petroleo) !important; }
 .VPHomeHero .text { color: var(--brand-naranja) !important; }
+.VPHomeHero .name .clip { color: var(--brand-petroleo) !important; }
+.VPHomeHero .tagline { color: var(--brand-texto-secundario) !important; }
 
 /* Botones */
 .VPButton.brand {
