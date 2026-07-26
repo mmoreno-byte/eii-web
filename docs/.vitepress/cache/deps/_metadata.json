@@ -1,50 +1,56 @@
 {
-  "hash": "5981da66",
-  "browserHash": "efd2440b",
+  "hash": "f0dfcc29",
+  "browserHash": "e730e6d0",
   "optimized": {
     "vue": {
       "src": "../../../../node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "70bfe212",
+      "fileHash": "90648e85",
       "needsInterop": false
     },
     "vitepress > @vue/devtools-api": {
       "src": "../../../../node_modules/@vue/devtools-api/lib/esm/index.js",
       "file": "vitepress___@vue_devtools-api.js",
-      "fileHash": "07229294",
+      "fileHash": "eeafe4d9",
       "needsInterop": false
     },
     "chart.js": {
       "src": "../../../../node_modules/chart.js/dist/chart.js",
       "file": "chart__js.js",
-      "fileHash": "388091e2",
+      "fileHash": "64b99bb8",
       "needsInterop": false
     },
     "jspdf": {
       "src": "../../../../node_modules/jspdf/dist/jspdf.es.min.js",
       "file": "jspdf.js",
-      "fileHash": "c369838a",
+      "fileHash": "f7a47142",
       "needsInterop": false
     },
     "jspdf-autotable": {
       "src": "../../../../node_modules/jspdf-autotable/dist/jspdf.plugin.autotable.mjs",
       "file": "jspdf-autotable.js",
-      "fileHash": "ad60891c",
+      "fileHash": "7d03e148",
       "needsInterop": false
+    },
+    "qrcode": {
+      "src": "../../../../node_modules/qrcode/lib/browser.js",
+      "file": "qrcode.js",
+      "fileHash": "0eca2c4b",
+      "needsInterop": true
     }
   },
   "chunks": {
-    "html2canvas.esm-CIBHRG4G": {
-      "file": "html2canvas__esm-CIBHRG4G.js"
-    },
-    "purify.es-JTCAJSEJ": {
-      "file": "purify__es-JTCAJSEJ.js"
-    },
     "index.es-GWZXLJAZ": {
       "file": "index__es-GWZXLJAZ.js"
     },
     "chunk-2ALL2YQY": {
       "file": "chunk-2ALL2YQY.js"
+    },
+    "html2canvas.esm-CIBHRG4G": {
+      "file": "html2canvas__esm-CIBHRG4G.js"
+    },
+    "purify.es-JTCAJSEJ": {
+      "file": "purify__es-JTCAJSEJ.js"
     },
     "chunk-TCQZMY3T": {
       "file": "chunk-TCQZMY3T.js"
