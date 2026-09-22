@@ -118,7 +118,7 @@
         <span class="cuadro" style="background:#C0392B"></span> Dolor alto
       </span>
       <span class="leyenda-item">
-        <span class="cuadro" style="background:#fff;border:1px dashed #999"></span> Sin registro
+        <span class="cuadro cuadro-vacio" style="background:#fff;border:1px dashed #999"></span> Sin registro
       </span>
     </div>
 

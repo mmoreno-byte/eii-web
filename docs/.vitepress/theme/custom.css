@@ -136,6 +136,12 @@
 .dark .celda-vacia { background: transparent !important; }
 .dark .celda-fuera { background: #1A2A33 !important; }
 .dark .celda-dosis { background: rgba(230,126,34,0.16) !important; }
+.dark .celda-hoy { background: #2A5A6E !important; }
+.dark .btn-secundario { background: #2A5A6E !important; }
+.dark .btn-secundario:hover { background: #35708A !important; }
+.dark .cal-hoy-btn { background: #2A5A6E !important; }
+.dark .cal-hoy-btn:hover { background: #35708A !important; }
+.dark .cuadro-vacio { background: transparent !important; border-color: #566977 !important; }
 .dark .proxima-dosis-card { background: linear-gradient(135deg, rgba(230,126,34,0.16), rgba(26,60,74,0.3)) !important; }
 .dark .chip-dosis { background: #2A5A6E !important; }
 .dark .form-toggle { background: #1F2F37 !important; border-color: var(--vp-c-border); }
