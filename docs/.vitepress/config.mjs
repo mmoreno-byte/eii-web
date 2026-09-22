@@ -28,7 +28,7 @@ export default defineConfig({
       { text: 'Parte de Guerra', link: '/parte-de-guerra' }
     ],
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/mmorenodev/eii-web' }
+      { icon: 'github', link: 'https://github.com/mmoreno-byte/eii-web' }
     ],
     footer: {
       message: 'Esto no es consejo médico. Siempre consulta a tu especialista.',
