@@ -102,15 +102,22 @@
 .dark .calendario-container,
 .dark .grafico-container,
 .dark .pdf-container,
-.dark .bristol-container { background: var(--brand-tarjeta) !important; color: var(--vp-c-text-1); }
+.dark .bristol-container,
+.dark .tratamiento-container { background: var(--brand-tarjeta) !important; color: var(--vp-c-text-1); }
 .dark .tarjeta-eii h3,
 .dark .tarjeta-eii h4,
 .dark .calendario-container h3,
 .dark .grafico-container h3,
 .dark .pdf-container h3,
 .dark .bristol-container h3,
+.dark .tratamiento-container h3,
+.dark .mes-bloque h4,
 .dark .chart-card h4,
 .dark .resumen-ejecutivo h4 { color: var(--vp-c-text-1) !important; }
+
+.dark .tratamiento-intro { color: var(--vp-c-text-2); }
+.dark .proxima-dosis-fecha { color: var(--vp-c-text-1); }
+.dark .proxima-dosis-etiqueta { color: var(--vp-c-text-2); }
 
 .dark .campo-eii label { color: var(--vp-c-text-1); }
 .dark .campo-eii input,
@@ -125,22 +132,29 @@
 .dark .rc-label,
 .dark .leyenda-grid { color: var(--vp-c-text-2); }
 
-.dark .celda-dia { background: #1F2F37; border-color: var(--vp-c-border); color: var(--vp-c-text-1); }
-.dark .celda-vacia { background: transparent; }
-.dark .celda-fuera { background: #1A2A33; }
-.dark .form-toggle { background: #1F2F37; border-color: var(--vp-c-border); }
+.dark .celda-dia { background: #1F2F37 !important; color: var(--vp-c-text-1); }
+.dark .celda-vacia { background: transparent !important; }
+.dark .celda-fuera { background: #1A2A33 !important; }
+.dark .celda-dosis { background: rgba(230,126,34,0.16) !important; }
+.dark .proxima-dosis-card { background: linear-gradient(135deg, rgba(230,126,34,0.16), rgba(26,60,74,0.3)) !important; }
+.dark .chip-dosis { background: #2A5A6E !important; }
+.dark .form-toggle { background: #1F2F37 !important; border-color: var(--vp-c-border); }
+.dark .cal-nav { background: #1F2F37 !important; border-color: var(--vp-c-border); }
 
 .dark .nota-eii { color: var(--vp-c-text-1); background: rgba(230,126,34,0.12); }
 .dark .gestion-texto { color: var(--vp-c-text-2); }
 .dark .bristol-intro,
 .dark .bristol-desc,
 .dark .bristol-leyenda { color: var(--vp-c-text-1); }
-.dark .bristol-card { background: #1F2F37; border-color: var(--vp-c-border); }
+.dark .bristol-card { background: #1F2F37 !important; border-color: var(--vp-c-border); }
 .dark .bristol-card h4 { color: var(--vp-c-text-1); }
-.dark .bristol-tag { background: #243842; }
+.dark .bristol-tag { background: #243842 !important; }
 .dark .pdf-intro { color: var(--vp-c-text-2); }
-.dark .mes-select { background: #1F2F37; color: var(--vp-c-text-1); border-color: var(--vp-c-border); }
+.dark .mes-select { background: #1F2F37 !important; color: var(--vp-c-text-1); border-color: var(--vp-c-border); }
 .dark .vacio-grafico { color: var(--vp-c-text-2); }
+.dark .dato-card { background: #1F2F37 !important; }
+.dark .dato-card-app { background: linear-gradient(135deg, rgba(230,126,34,0.16), rgba(26,60,74,0.3)) !important; }
+.dark .dato-card-peligro { background: rgba(192,57,43,0.12) !important; }
 
 .dark .VPHome { background: linear-gradient(180deg, var(--brand-crema) 0%, var(--brand-fondo) 100%) !important; }
 

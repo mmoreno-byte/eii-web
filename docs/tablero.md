@@ -6,6 +6,7 @@ title: Mi Tablero de Control
 
 <script setup>
 import Calendario from '/.vitepress/components/Calendario.vue'
+import CalendarioTratamiento from '/.vitepress/components/CalendarioTratamiento.vue'
 import GraficoMensual from '/.vitepress/components/GraficoMensual.vue'
 import EscalaBristol from '/.vitepress/components/EscalaBristol.vue'
 import GeneradorPDF from '/.vitepress/components/GeneradorPDF.vue'
@@ -28,6 +29,10 @@ const registros = inject(REGISTROS_KEY)
 ## 🗓️ Calendario
 
 <Calendario />
+
+## 💊 Calendario de tratamiento
+
+<CalendarioTratamiento />
 
 ## 📈 Gráficos mensuales
 
