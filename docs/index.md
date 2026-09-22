@@ -1,5 +1,7 @@
 ---
 layout: home
+title: Inicio
+description: Centro de Control para Guerreros Invisibles — registra síntomas, calcula tu calendario de tratamiento y accede a ciencia traducida sobre EII.
 
 hero:
   name: "Mi Intestino en Órbita"
