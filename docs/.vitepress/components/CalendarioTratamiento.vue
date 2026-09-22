@@ -151,8 +151,7 @@ onMounted(async () => {
 
   try {
     const jsPDF = (await import('jspdf')).jsPDF || (await import('jspdf')).default
-    const autoTable = (await import('jspdf-autotable')).default
-    jspdfMod.value = { jsPDF, autoTable }
+    jspdfMod.value = { jsPDF }
     listoPdf.value = true
   } catch (e) {
     console.error('No se pudo cargar jsPDF', e)
@@ -295,6 +294,82 @@ const COLOR_TEXTO = [90, 107, 117]
 const COLOR_BORDE = [220, 224, 228]
 const COLOR_TEXTO_CLARO = [255, 255, 255]
 const WEB_URL = 'https://eii-web.pages.dev'
+const DIAS_SEMANA_CORTO = ['L', 'M', 'X', 'J', 'V', 'S', 'D']
+
+function altoBloqueMes(bloque) {
+  const filas = Math.ceil(bloque.celdas.length / 7)
+  return 10 + filas * 9
+}
+
+function dibujarMesPDF(doc, bloque, x, y, blockW, dosisSet, hoyStr) {
+  const colW = blockW / 7
+  const rowH = 9
+
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(10)
+  doc.setTextColor(...COLOR_PETROLEO)
+  doc.text(`${bloque.nombre} ${bloque.anio}`, x, y + 3)
+
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(7)
+  doc.setTextColor(...COLOR_TEXTO)
+  DIAS_SEMANA_CORTO.forEach((d, i) => {
+    doc.text(d, x + i * colW + colW / 2, y + 8, { align: 'center' })
+  })
+
+  const gridTop = y + 10
+  bloque.celdas.forEach((celda, i) => {
+    if (!celda) return
+    const col = i % 7
+    const row = Math.floor(i / 7)
+    const cx = x + col * colW
+    const cy = gridTop + row * rowH
+    const esDosis = dosisSet.has(celda.fecha)
+    const esHoy = celda.fecha === hoyStr
+
+    if (esDosis) {
+      doc.setFillColor(...COLOR_NARANJA)
+      doc.roundedRect(cx + 0.5, cy + 0.5, colW - 1, rowH - 1, 1.2, 1.2, 'F')
+    } else {
+      doc.setDrawColor(...COLOR_BORDE)
+      doc.setLineWidth(0.15)
+      doc.roundedRect(cx + 0.5, cy + 0.5, colW - 1, rowH - 1, 1.2, 1.2, 'S')
+    }
+    if (esHoy) {
+      doc.setDrawColor(...COLOR_PETROLEO)
+      doc.setLineWidth(0.5)
+      doc.roundedRect(cx + 0.5, cy + 0.5, colW - 1, rowH - 1, 1.2, 1.2, 'S')
+    }
+    doc.setFont('helvetica', esDosis ? 'bold' : 'normal')
+    doc.setFontSize(8)
+    doc.setTextColor(...(esDosis ? COLOR_TEXTO_CLARO : COLOR_PETROLEO))
+    doc.text(String(celda.dia), cx + colW / 2, cy + rowH / 2 + 1.3, { align: 'center' })
+  })
+}
+
+function dibujarPiePagina(doc, pageW, pageH, margin) {
+  const footerY = pageH - 10
+  doc.setDrawColor(...COLOR_NARANJA)
+  doc.setLineWidth(0.3)
+  doc.line(margin, footerY - 5, pageW - margin, footerY - 5)
+  doc.setFont('helvetica', 'italic')
+  doc.setFontSize(9)
+  doc.setTextColor(...COLOR_PETROLEO)
+  doc.text('"El control empieza por registrar"', pageW / 2, footerY, { align: 'center' })
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(7.5)
+  doc.setTextColor(...COLOR_TEXTO)
+  doc.text(`Descarga más recursos en ${WEB_URL}`, pageW / 2, footerY + 4, { align: 'center' })
+}
+
+function dibujarCabeceraSecundaria(doc, pageW, margin) {
+  doc.setFillColor(...COLOR_NARANJA)
+  doc.rect(0, 0, pageW, 18, 'F')
+  doc.setTextColor(...COLOR_TEXTO_CLARO)
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(13)
+  doc.text('Calendario de tratamiento (continuación)', margin, 12)
+}
 
 async function descargarPDF() {
   if (!listoPdf.value) {
@@ -303,11 +378,12 @@ async function descargarPDF() {
   }
   generandoPdf.value = true
   try {
-    const { jsPDF, autoTable } = jspdfMod.value
+    const { jsPDF } = jspdfMod.value
     const doc = new jsPDF({ unit: 'mm', format: 'a4' })
     const pageW = doc.internal.pageSize.getWidth()
     const pageH = doc.internal.pageSize.getHeight()
     const margin = 14
+    const limiteInferior = pageH - 24
 
     doc.setFillColor(...COLOR_NARANJA)
     doc.rect(0, 0, pageW, 32, 'F')
@@ -340,54 +416,62 @@ async function descargarPDF() {
     doc.setLineWidth(0.6)
     doc.line(margin + 30, 55, pageW - margin - 30, 55)
 
-    const hoyStr = hoyISO()
-    const body = fechasDosis.value.map((f, i) => {
-      const [y, m, d] = f.split('-').map(Number)
-      const diaSemana = new Date(y, m - 1, d).toLocaleDateString('es-ES', { weekday: 'long' })
-      return [
-        String(i + 1),
-        `${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}/${y}`,
-        diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1),
-        f < hoyStr ? 'Pasada' : (f === hoyStr ? 'Hoy' : '—')
-      ]
-    })
+    // Leyenda
+    doc.setFillColor(...COLOR_NARANJA)
+    doc.roundedRect(margin, 59, 4, 4, 1, 1, 'F')
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(8)
+    doc.setTextColor(...COLOR_TEXTO)
+    doc.text('Día de dosis', margin + 6, 62.5)
+    doc.setDrawColor(...COLOR_PETROLEO)
+    doc.setLineWidth(0.5)
+    doc.roundedRect(margin + 38, 59, 4, 4, 1, 1, 'S')
+    doc.text('Hoy', margin + 44, 62.5)
 
-    autoTable(doc, {
-      startY: 60,
-      head: [['#', 'Fecha', 'Día', 'Estado']],
-      body,
-      theme: 'grid',
-      margin: { left: margin, right: margin },
-      styles: { font: 'helvetica', fontSize: 9, cellPadding: 3, lineColor: COLOR_BORDE, lineWidth: 0.2, textColor: COLOR_PETROLEO, valign: 'middle' },
-      headStyles: { fillColor: COLOR_NARANJA, textColor: COLOR_TEXTO_CLARO, fontStyle: 'bold', halign: 'center' },
-      columnStyles: {
-        0: { cellWidth: 14, halign: 'center' },
-        1: { cellWidth: 32, halign: 'center', fontStyle: 'bold' },
-        2: { cellWidth: 40 },
-        3: { cellWidth: 'auto', halign: 'center' }
-      },
-      didDrawPage: () => {
-        const footerY = pageH - 10
-        doc.setDrawColor(...COLOR_NARANJA)
-        doc.setLineWidth(0.3)
-        doc.line(margin, footerY - 5, pageW - margin, footerY - 5)
-        doc.setFont('helvetica', 'italic')
-        doc.setFontSize(9)
-        doc.setTextColor(...COLOR_PETROLEO)
-        doc.text('"El control empieza por registrar"', pageW / 2, footerY, { align: 'center' })
-        doc.setFont('helvetica', 'normal')
-        doc.setFontSize(7.5)
-        doc.setTextColor(...COLOR_TEXTO)
-        doc.text(`Descarga más recursos en ${WEB_URL}`, pageW / 2, footerY + 4, { align: 'center' })
+    // Cuadrícula de meses, 2 columnas
+    const dosisSet = new Set(fechasDosis.value)
+    const hoyStr = hoyISO()
+    const gapX = 10
+    const gapY = 8
+    const blockW = (pageW - margin * 2 - gapX) / 2
+
+    let x = margin
+    let y = 70
+    let colIdx = 0
+    let rowMaxH = 0
+
+    mesesGrid.value.forEach((bloque) => {
+      const altoBloque = altoBloqueMes(bloque)
+      if (y + altoBloque > limiteInferior) {
+        dibujarPiePagina(doc, pageW, pageH, margin)
+        doc.addPage()
+        dibujarCabeceraSecundaria(doc, pageW, margin)
+        y = 28
+        x = margin
+        colIdx = 0
+        rowMaxH = 0
+      }
+      dibujarMesPDF(doc, bloque, x, y, blockW, dosisSet, hoyStr)
+      rowMaxH = Math.max(rowMaxH, altoBloque)
+      colIdx++
+      if (colIdx === 2) {
+        colIdx = 0
+        x = margin
+        y += rowMaxH + gapY
+        rowMaxH = 0
+      } else {
+        x += blockW + gapX
       }
     })
 
-    const finalY = doc.lastAutoTable.finalY + 10
-    doc.setFontSize(8)
+    const finalY = (colIdx === 0 ? y : y + rowMaxH) + 8
+    doc.setFontSize(7.5)
     doc.setTextColor(...COLOR_TEXTO)
     doc.setFont('helvetica', 'italic')
-    const disclaimer = 'Calendario orientativo generado por "Mi Intestino en Órbita" a partir de la fecha y frecuencia indicadas. No sustituye la pauta de tu médico o enfermera de EII: confirma siempre cualquier cambio con tu equipo.'
-    doc.text(doc.splitTextToSize(disclaimer, pageW - margin * 2), margin, finalY)
+    const disclaimer = 'Calendario orientativo generado a partir de la fecha y frecuencia indicadas. No sustituye la pauta de tu médico o enfermera de EII: confirma siempre cualquier cambio con tu equipo.'
+    doc.text(doc.splitTextToSize(disclaimer, pageW - margin * 2), margin, Math.min(finalY, limiteInferior))
+
+    dibujarPiePagina(doc, pageW, pageH, margin)
 
     doc.save(`eii-tratamiento-${nombreMedicamento.value.toLowerCase().replace(/\s+/g, '-')}.pdf`)
   } catch (err) {
