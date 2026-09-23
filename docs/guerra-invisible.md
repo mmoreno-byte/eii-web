@@ -1,10 +1,10 @@
-# 🔬 La Guerra Invisible
-
 ---
 title: Mi duro camino por la EII
 ---
 
-# Mi duro camino por la EII: de la incomprensión a la remisión
+# 🔬 La Guerra Invisible
+
+## Mi duro camino por la EII: de la incomprensión a la remisión
 
 **Todo empezó cuando me levanté un día y no fui al baño bien. Era la primera vez que hacía distinto.**
 
@@ -52,4 +52,4 @@ No estás loco o loca. No exageras. Tu cuerpo te está pidiendo ayuda, y tienes 
 
 **Yo lo hice. Tú también puedes.**
 
----
+— Loli

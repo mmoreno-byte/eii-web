@@ -17,11 +17,11 @@ Todo lo que necesitas para llegar a la consulta con argumentos y no con disculpa
 (fecha, deposiciones, dolor 1-10, estrés 1-10, sueño en horas, notas) y, en la
 segunda página, la **Escala de Bristol** como referencia. Todo con la paleta de tu web.
 
-**Cómo generarlo:** entra en [Mi Tablero → Generar PDF](/tablero#generar-pdf-para-imprimir),
+**Cómo generarlo:** entra en [Mi Tablero → Generar PDF](/tablero#📄-generar-pdf-para-imprimir),
 elige el mes y descárgalo. También se autocompleta con los registros que ya tengas.
 
 <div class="cta-box">
-  <a class="btn-cta" href="/tablero#generar-pdf-para-imprimir">📥 Ir al generador de PDF</a>
+  <a class="btn-cta" href="/tablero#📄-generar-pdf-para-imprimir">📥 Ir al generador de PDF</a>
 </div>
 
 ## 🚽 Escala de Bristol

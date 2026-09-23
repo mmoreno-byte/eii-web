@@ -221,7 +221,7 @@ async function importarJSON(e) {
       const ordenados = Array.from(mapa.values()).sort((a, b) => a.fecha.localeCompare(b.fecha))
       // Sustituye en localStorage
       try {
-        localStorage.setItem('eii-registros', JSON.stringify(ordenados))
+        localStorage.setItem('registrosEII', JSON.stringify(ordenados))
       } catch {}
       alert(`Importados ${lista.length} registros. Recarga la página para verlos.`)
     } catch (err) {
@@ -238,11 +238,11 @@ function importarDesdeURL(b64) {
     const data = JSON.parse(json)
     const lista = Array.isArray(data) ? data : data.registros
     if (!Array.isArray(lista)) return
-    const existentes = JSON.parse(localStorage.getItem('eii-registros') || '[]')
+    const existentes = JSON.parse(localStorage.getItem('registrosEII') || '[]')
     const mapa = new Map(existentes.map((r) => [r.fecha, r]))
     lista.forEach((r) => { if (r.fecha) mapa.set(r.fecha, r) })
     const ordenados = Array.from(mapa.values()).sort((a, b) => a.fecha.localeCompare(b.fecha))
-    localStorage.setItem('eii-registros', JSON.stringify(ordenados))
+    localStorage.setItem('registrosEII', JSON.stringify(ordenados))
     // Limpia la URL para que no se reimporte al recargar
     history.replaceState({}, '', location.pathname)
     return lista.length
@@ -255,7 +255,7 @@ function importarDesdeURL(b64) {
 function borrarTodo() {
   if (!confirm('¿Borrar TODOS los registros de este dispositivo?')) return
   if (!confirm('¿Seguro seguro? Piensa en tu médico 😅')) return
-  try { localStorage.removeItem('eii-registros') } catch {}
+  try { localStorage.removeItem('registrosEII') } catch {}
   alert('Registros borrados. Recarga la página.')
 }
 
