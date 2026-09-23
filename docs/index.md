@@ -26,8 +26,8 @@ features:
     title: Visibilidad Real
     details: "Herramientas para explicar lo que sientes a tu médico y a tu familia. La EII es invisible, pero tú no tienes por qué serlo."
   - icon: 🛡️
-    title: Comunidad de Guerreros
-    details: "No estás solo. Conoce a otros pacientes, comparte experiencias y aprende de los que ya han pasado por lo que tú estás viviendo."
+    title: Comunidad de Guerreros (muy pronto)
+    details: "Se está gestando un espacio para conocer a otros pacientes y compartir experiencias. Apúntate a El Parte de Guerra y serás de los primeros en entrar."
 ---
 
 <div class="custom-manifesto">
@@ -40,7 +40,7 @@ Médicos que me decían que mis análisis estaban bien mientras yo no podía lev
 
 Hasta que decidí tomar el control. Empecé a registrar mis síntomas, a leer estudios, a entender mi cuerpo y a aprender a comunicar lo que sentía.
 
-Esta web es el resultado de ese viaje. No hay recetas mágicas ni dietas milagro. Solo herramientas reales: un calendario de síntomas, estudios traducidos, preguntas para tu médico y una comunidad para que no te sientas solo.
+Esta web es el resultado de ese viaje. No hay recetas mágicas ni dietas milagro. Solo herramientas reales: un calendario de síntomas, estudios traducidos, preguntas para tu médico y, muy pronto, una comunidad para que no te sientas solo.
 
 **Porque llevar un intestino invisible no tiene por qué ser una guerra en solitario.**
 
